@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>五子棋游戏</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      text-align: center;
+    }
+
+    #board {
+      width: 400px;
+      height: 400px;
+      border: 1px solid black;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(15, 1fr);
+      grid-template-rows: repeat(15, 1fr);
+    }
+
+   .cell {
+      width: 25px;
+      height: 25px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+   .black {
+      background-color: black;
+    }
+
+   .white {
+      background-color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>五子棋游戏</h2>
+  <div id="board"></div>
+
+  <script>
+    let board = document.getElementById('board');
+    let currentPlayer = 'black';
+
+    for (let i = 0; i < 15 * 15; i++) {
+      let cell = document.createElement('div');
+      cell.classList.add('cell');
+      cell.addEventListener('click', function() {
+        if (!this.classList.contains('black') &&!this.classList.contains('white')) {
+          this.classList.add(currentPlayer);
+          if (checkWin(currentPlayer)) {
+            alert(currentPlayer + ' 玩家获胜！');
+          } else {
+            currentPlayer = currentPlayer === 'black'? 'white' : 'black';
+          }
+        }
+      });
+      board.appendChild(cell);
+    }
+
+    function checkWin(player) {
+      let directions = [[1, 0], [0, 1], [1, 1], [1, -1]];
+
+      for (let row = 0; row < 15; row++) {
+        for (let col = 0; col < 15; col++) {
+          for (let dir of directions) {
+            let count = 1;
+            let r = row;
+            let c = col;
+
+            while (r >= 0 && r < 15 && c >= 0 && c < 15 && board.children[r * 15 + c].classList.contains(player)) {
+              count++;
+              r += dir[0];
+              c += dir[1];
+            }
+
+            r = row - dir[0];
+            c = col - dir[1];
+
+            while (r >= 0 && r < 15 && c >= 0 && c < 15 && board.children[r * 15 + c].classList.contains(player)) {
+              count++;
+              r -= dir[0];
+              c -= dir[1];
+            }
+
+            if (count >= 5) {
+              return true;
+            }
+          }
+        }
+      }
+
+      return false;
+    }
+  </script>
+</body>
+
+</html>
