@@ -13,8 +13,8 @@
     }
 
     #game-container {
-      width: 300px;
-      height: 600px;
+      width: 100%;
+      height: 100vh;
       border: 1px solid black;
       margin: 0 auto;
     }
@@ -28,8 +28,8 @@
     }
 
   .cell {
-      width: 30px;
-      height: 30px;
+      width: 100%;
+      height: 100%;
       border: 1px solid #ccc;
     }
 
@@ -129,7 +129,13 @@
     generateShape();
     drawShape();
 
-    setInterval(moveDown, 1000);
+    setInterval(moveDown, 500);
+
+    // 增加触摸事件处理，适用于手机
+    document.addEventListener('touchstart', function (event) {
+      event.preventDefault();
+      moveDown();
+    });
   </script>
 </body>
 
