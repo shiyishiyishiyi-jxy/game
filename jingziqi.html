@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>井字棋游戏</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    table {
+      border-collapse: collapse;
+    }
+
+    td {
+      width: 100px;
+      height: 100px;
+      border: 1px solid black;
+      text-align: center;
+      font-size: 50px;
+      cursor: pointer;
+    }
+
+    td:hover {
+      background-color: lightgray;
+    }
+
+    #message {
+      font-size: 20px;
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>井字棋游戏</h2>
+  <table>
+    <tr>
+      <td onclick="makeMove(0, 0)"></td>
+      <td onclick="makeMove(0, 1)"></td>
+      <td onclick="makeMove(0, 2)"></td>
+    </tr>
+    <tr>
+      <td onclick="makeMove(1, 0)"></td>
+      <td onclick="makeMove(1, 1)"></td>
+      <td onclick="makeMove(1, 2)"></td>
+    </tr>
+    <tr>
+      <td onclick="makeMove(2, 0)"></td>
+      <td onclick="makeMove(2, 1)"></td>
+      <td onclick="makeMove(2, 2)"></td>
+    </tr>
+  </table>
+  <p id="message"></p>
+
+  <script>
+    let currentPlayer = 'X';
+    let board = [['', '', ''], ['', '', ''], ['', '', '']];
+
+    function makeMove(row, col) {
+      if (board[row][col] === '') {
+        board[row][col] = currentPlayer;
+        document.getElementsByTagName('td')[row * 3 + col].innerHTML = currentPlayer;
+        if (checkWin(currentPlayer)) {
+          document.getElementById('message').innerHTML = `${currentPlayer} 获胜！`;
+          return;
+        }
+        currentPlayer = currentPlayer === 'X'? 'O' : 'X';
+      }
+    }
+
+    function checkWin(player) {
+      for (let i = 0; i < 3; i++) {
+        if ((board[i][0] === player && board[i][1] === player && board[i][2] === player) ||
+            (board[0][i] === player && board[1][i] === player && board[2][i] === player)) {
+          return true;
+        }
+      }
+
+      if ((board[0][0] === player && board[1][1] === player && board[2][2] === player) ||
+          (board[0][2] === player && board[1][1] === player && board[2][0] === player)) {
+        return true;
+      }
+
+      return false;
+    }
+  </script>
+</body>
+
+</html>
