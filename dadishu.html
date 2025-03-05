@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打地鼠小游戏</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            width: 320px;
+            margin: 20px auto;
+        }
+
+        .hole {
+            width: 100px;
+            height: 100px;
+            background-color: #ccc;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mole {
+            width: 80px;
+            height: 80px;
+            background-image: url('https://img.freepik.com/premium-vector/cute-mole-vector-illustration_295783-43.jpg');
+            background-size: cover;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>打地鼠小游戏</h1>
+    <p>得分: <span id="score">0</span></p>
+    <p>剩余时间: <span id="time-left">30</span> 秒</p>
+    <div id="game-board">
+        <!-- 地鼠洞会通过 JavaScript 动态创建 -->
+    </div>
+    <button onclick="startGame()">开始游戏</button>
+
+    <script>
+        const gameBoard = document.getElementById('game-board');
+        const scoreDisplay = document.getElementById('score');
+        const timeLeftDisplay = document.getElementById('time-left');
+        let score = 0;
+        let timeLeft = 30;
+        let gameInterval;
+        let moleInterval;
+
+        function createHoles() {
+            for (let i = 0; i < 9; i++) {
+                const hole = document.createElement('div');
+                hole.classList.add('hole');
+                const mole = document.createElement('div');
+                mole.classList.add('mole');
+                mole.addEventListener('click', hitMole);
+                hole.appendChild(mole);
+                gameBoard.appendChild(hole);
+            }
+        }
+
+        function hitMole() {
+            if (this.style.display === 'block') {
+                score++;
+                scoreDisplay.textContent = score;
+                this.style.display = 'none';
+            }
+        }
+
+        function showMole() {
+            const holes = document.querySelectorAll('.hole');
+            const randomIndex = Math.floor(Math.random() * holes.length);
+            const mole = holes[randomIndex].querySelector('.mole');
+            mole.style.display = 'block';
+            setTimeout(() => {
+                mole.style.display = 'none';
+            }, Math.random() * 1500 + 500);
+        }
+
+        function startGame() {
+            score = 0;
+            scoreDisplay.textContent = score;
+            timeLeft = 30;
+            timeLeftDisplay.textContent = timeLeft;
+            clearInterval(gameInterval);
+            clearInterval(moleInterval);
+            gameInterval = setInterval(countdown, 1000);
+            moleInterval = setInterval(showMole, 1000);
+        }
+
+        function countdown() {
+            timeLeft--;
+            timeLeftDisplay.textContent = timeLeft;
+            if (timeLeft === 0) {
+                clearInterval(gameInterval);
+                clearInterval(moleInterval);
+                alert(`游戏结束！你的得分是: ${score}`);
+            }
+        }
+
+        createHoles();
+    </script>
+</body>
+
+</html>
