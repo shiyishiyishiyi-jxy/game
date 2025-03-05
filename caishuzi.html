@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猜数字小游戏</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>猜数字小游戏</h1>
+    <p>我已经想好了一个 1 到 100 之间的数字，你可以开始猜啦！</p>
+    <input type="number" id="guessInput" placeholder="输入你的猜测">
+    <button onclick="checkGuess()">提交猜测</button>
+    <p id="message"></p>
+    <p id="attempts">你已经尝试了 0 次。</p>
+    <button onclick="resetGame()">重新开始</button>
+
+    <script>
+        // 生成 1 到 100 之间的随机数字
+        let secretNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+
+        function checkGuess() {
+            // 获取用户输入的猜测值
+            const guess = parseInt(document.getElementById('guessInput').value);
+            const messageElement = document.getElementById('message');
+            attempts++;
+
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                messageElement.textContent = '请输入一个 1 到 100 之间的有效数字。';
+            } else if (guess < secretNumber) {
+                messageElement.textContent = '猜的数字太小了，再试一次！';
+            } else if (guess > secretNumber) {
+                messageElement.textContent = '猜的数字太大了，再试一次！';
+            } else {
+                messageElement.textContent = `恭喜你，猜对了！你一共用了 ${attempts} 次尝试。`;
+                document.getElementById('guessInput').disabled = true;
+            }
+
+            document.getElementById('attempts').textContent = `你已经尝试了 ${attempts} 次。`;
+        }
+
+        function resetGame() {
+            // 重新生成随机数字
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            document.getElementById('guessInput').disabled = false;
+            document.getElementById('guessInput').value = '';
+            document.getElementById('message').textContent = '';
+            document.getElementById('attempts').textContent = '你已经尝试了 0 次。';
+        }
+    </script>
+</body>
+
+</html>
