@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>贪吃蛇游戏</title>
+  <style>
+    body {
+      background-color: black;
+    }
+
+    #game-board {
+      width: 100vw;
+      height: 100vh;
+      border: 1px solid white;
+      position: relative;
+    }
+
+  .snake-cell {
+      width: 1vw;
+      height: 1vw;
+      background-color: green;
+      position: absolute;
+    }
+
+  .food-cell {
+      width: 1vw;
+      height: 1vw;
+      background-color: red;
+      position: absolute;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>贪吃蛇游戏</h2>
+  <div id="game-board"></div>
+
+  <script>
+    let snake = [{ x: 50, y: 50 }];
+    let food = { x: Math.floor(Math.random() * 100) * 1, y: Math.floor(Math.random() * 100) * 1 };
+    let direction = 'right';
+    let speed = 200; // 降低速度
+
+    function draw() {
+      let board = document.getElementById('game-board');
+      board.innerHTML = '';
+
+      for (let cell of snake) {
+        let div = document.createElement('div');
+        div.classList.add('snake-cell');
+        div.style.left = cell.x + 'vw';
+        div.style.top = cell.y + 'vw';
+        board.appendChild(div);
+      }
+
+      let foodDiv = document.createElement('div');
+      foodDiv.classList.add('food-cell');
+      foodDiv.style.left = food.x + 'vw';
+      foodDiv.style.top = food.y + 'vw';
+      board.appendChild(foodDiv);
+    }
+
+    function move() {
+      let head = { x: snake[0].x, y: snake[0].y };
+
+      switch (direction) {
+        case 'right':
+          head.x += 1;
+          break;
+        case 'left':
+          head.x -= 1;
+          break;
+        case 'up':
+          head.y -= 1;
+          break;
+        case 'down':
+          head.y += 1;
+          break;
+      }
+
+      if (head.x === food.x && head.y === food.y) {
+        food = { x: Math.floor(Math.random() * 100) * 1, y: Math.floor(Math.random() * 100) * 1 };
+      } else {
+        snake.pop();
+      }
+
+      snake.unshift(head);
+
+      if (checkCollision()) {
+        alert('游戏结束！');
+        return;
+      }
+
+      draw();
+    }
+
+    function checkCollision() {
+      let head = snake[0];
+
+      for (let i = 1; i < snake.length; i++) {
+        if (head.x === snake[i].x && head.y === snake[i].y) {
+          return true;
+        }
+      }
+
+      if (head.x < 0 || head.x >= 100 || head.y < 0 || head.y >= 100) {
+        return true;
+      }
+
+      return false;
+    }
+
+    document.addEventListener('keydown', function (event) {
+      switch (event.keyCode) {
+        case 37:
+          if (direction!== 'right') {
+            direction = 'left';
+          }
+          break;
+        case 38:
+          if (direction!== 'down') {
+            direction = 'up';
+          }
+          break;
+        case 39:
+          if (direction!== 'left') {
+            direction = 'right';
+          }
+          break;
+        case 40:
+          if (direction!== 'up') {
+            direction = 'down';
+          }
+          break;
+      }
+    });
+
+    setInterval(move, speed);
+  </script>
+</body>
+
+</html>
