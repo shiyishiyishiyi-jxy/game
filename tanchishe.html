@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,15 +13,35 @@
       height: 100vh;
       margin: 0;
       background-color: #333;
+      flex-direction: column;
     }
 
     canvas {
       border: 1px solid #fff;
     }
+
+   .control-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+   .control-buttons button {
+      padding: 10px;
+      font-size: 18px;
+    }
   </style>
 </head>
+
 <body>
   <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <div class="control-buttons">
+    <button id="upButton">↑</button>
+    <button id="leftButton">←</button>
+    <button id="rightButton">→</button>
+    <button id="downButton">↓</button>
+  </div>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -109,7 +130,7 @@
     function drawSnake() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawGrid();
-      
+
       snake.forEach((segment, index) => {
         let img;
         if (index === 0) {
@@ -201,7 +222,7 @@
 
     // 开始游戏
     function startGame() {
-      gameInterval = setInterval(function() {
+      gameInterval = setInterval(function () {
         moveSnake();
         drawSnake();
       }, gameSpeed);
@@ -230,6 +251,28 @@
       }
     });
 
+    // 监听按钮点击事件改变蛇的移动方向
+    const upButton = document.getElementById('upButton');
+    const downButton = document.getElementById('downButton');
+    const leftButton = document.getElementById('leftButton');
+    const rightButton = document.getElementById('rightButton');
+
+    upButton.addEventListener('click', () => {
+      if (direction !== 'down') direction = 'up';
+    });
+
+    downButton.addEventListener('click', () => {
+      if (direction !== 'up') direction = 'down';
+    });
+
+    leftButton.addEventListener('click', () => {
+      if (direction !== 'right') direction = 'left';
+    });
+
+    rightButton.addEventListener('click', () => {
+      if (direction !== 'left') direction = 'right';
+    });
+
     // 等待图片加载完成后开始游戏
     Promise.all([
       new Promise(resolve => headImg.onload = resolve),
@@ -241,4 +284,5 @@
     });
   </script>
 </body>
+
 </html>
