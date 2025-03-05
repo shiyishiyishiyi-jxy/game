@@ -27,13 +27,14 @@
       grid-template-rows: repeat(20, 1fr);
     }
 
-  .cell {
+ .cell {
       width: 100%;
       height: 100%;
       border: 1px solid #ccc;
+      box-sizing: border-box;
     }
 
-  .filled {
+ .filled {
       background-color: blue;
     }
   </style>
@@ -47,6 +48,10 @@
 
   <script>
     let gameBoard = document.getElementById('game-board');
+    if (!gameBoard) {
+      console.error('Game board not found');
+      return;
+    }
     let shapes = [
       [[1, 1, 1, 1]],
       [[1, 1], [1, 1]],
@@ -66,6 +71,7 @@
       currentShape = shapes[randomIndex];
       currentX = 3;
       currentY = 0;
+      console.log('Generated shape:', currentShape);
     }
 
     function drawShape() {
@@ -73,7 +79,10 @@
         for (let col = 0; col < currentShape[row].length; col++) {
           if (currentShape[row][col] === 1) {
             let cell = gameBoard.children[currentY + row * 10 + col + currentX];
-            cell.classList.add('filled');
+            if (cell) {
+              cell.classList.add('filled');
+              console.log('Drawing cell at', currentY + row * 10 + col + currentX);
+            }
           }
         }
       }
@@ -84,7 +93,9 @@
         for (let col = 0; col < currentShape[row].length; col++) {
           if (currentShape[row][col] === 1) {
             let cell = gameBoard.children[currentY + row * 10 + col + currentX];
-            cell.classList.remove('filled');
+            if (cell) {
+              cell.classList.remove('filled');
+            }
           }
         }
       }
@@ -106,7 +117,7 @@
         for (let col = 0; col < currentShape[row].length; col++) {
           if (currentShape[row][col] === 1) {
             let index = currentY + row * 10 + col + currentX;
-            if (currentY + row >= 20 || gameBoard.children[index].classList.contains('filled')) {
+            if (currentY + row >= 20 || gameBoard.children[index] && gameBoard.children[index].classList.contains('filled')) {
               return true;
             }
           }
@@ -120,7 +131,9 @@
         for (let col = 0; col < currentShape[row].length; col++) {
           if (currentShape[row][col] === 1) {
             let cell = gameBoard.children[currentY + row * 10 + col + currentX];
-            cell.classList.add('filled');
+            if (cell) {
+              cell.classList.add('filled');
+            }
           }
         }
       }
@@ -134,6 +147,7 @@
     // 增加触摸事件处理，适用于手机
     document.addEventListener('touchstart', function (event) {
       event.preventDefault();
+      console.log('Touch event triggered');
       moveDown();
     });
   </script>
